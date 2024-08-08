@@ -40,8 +40,10 @@ export default function App() {
     }
 
     gameTableClone[row][column] = thisTurn;
+
     checkDraw(gameTableClone);
     checkWinners(gameTableClone, thisTurn);
+
     setCurrentTurn(nextTurn);
     setGameTable(gameTableClone);
   };
@@ -60,7 +62,7 @@ export default function App() {
 
   const verticalWinner = (table, playerChoise) => {
     for (let columnIndex = 0; columnIndex < 3; columnIndex++) {
-      let verticalResult = [];
+      const verticalResult = [];
 
       for (let rowIndex = 0; rowIndex < table.length; rowIndex++) {
         verticalResult.push(table[rowIndex][columnIndex]);
@@ -70,8 +72,6 @@ export default function App() {
         handleWinner(playerChoise);
         break;
       }
-
-      verticalResult = [];
     }
   };
 
