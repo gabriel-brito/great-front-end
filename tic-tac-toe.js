@@ -40,6 +40,7 @@ export default function App() {
     }
 
     gameTableClone[row][column] = thisTurn;
+    checkDraw(gameTableClone);
     checkWinners(gameTableClone, thisTurn);
     setCurrentTurn(nextTurn);
     setGameTable(gameTableClone);
@@ -53,7 +54,7 @@ export default function App() {
     });
 
     if (checkWinner(result, playerChoise)) {
-      chandleWinner(playerChoise);
+      handleWinner(playerChoise);
     }
   };
 
@@ -94,6 +95,23 @@ export default function App() {
     verticalWinner(gameTableClone, playerChoise);
 
     winnerByDiagonal(gameTableClone, playerChoise);
+  };
+
+  const checkDraw = (gameTable) => {
+    let isDraw = true;
+
+    for (let rowIndex = 0; rowIndex < gameTable.length; rowIndex++) {
+      for (let columnIndex = 0; columnIndex < 3; columnIndex++) {
+        if (!gameTable[rowIndex][columnIndex]) {
+          isDraw = false;
+          break;
+        }
+      }
+    }
+
+    if (isDraw) {
+      setWinnerPlayer("Draw!");
+    }
   };
 
   return (
