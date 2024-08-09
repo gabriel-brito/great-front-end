@@ -14,26 +14,73 @@ export default function Clock() {
   }, []);
 
   return (
-    <div>
-      <div className="clock">
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+      }}
+    >
+      <div
+        style={{
+          width: 300,
+          height: 300,
+          borderRadius: "50%",
+          flexDirection: "column",
+          position: "relative",
+          boxShadow: "0px 0px 12px 0px rgba(0,0,0,0.75)",
+        }}
+      >
+        <div
+          style={{
+            width: "25px",
+            height: "25px",
+            backgroundColor: "lightgrey",
+            borderRadius: "50%",
+            position: "absolute",
+            top: "calc(50% - 12.5px)",
+            left: "calc(50% - 12.5px)",
+            zIndex: 1,
+          }}
+        />
         <div
           id="hours"
-          className="hour_hand"
           style={{
+            position: "absolute",
+            transformOrigin: "bottom",
+            width: "3px",
+            height: "90px",
+            left: "49%",
+            top: "21%",
+            backgroundColor: "black",
             transform: `rotateZ(${now.getHours() * 30}deg)`,
           }}
         />
         <div
-          className="min_hand"
           id="minutes"
           style={{
-            transform: `rotate(Z${now.getMinutes() * 6}deg)`,
+            position: "absolute",
+            transformOrigin: "bottom",
+            width: "2px",
+            height: "125px",
+            left: "49%",
+            top: "8%",
+            backgroundColor: "black",
+            transform: `rotateZ(${now.getMinutes() * 6}deg)`,
           }}
         />
         <div
           id="seconds"
-          className="sec_hand"
           style={{
+            position: "absolute",
+            transformOrigin: "bottom",
+            width: "1px",
+            height: "125px",
+            left: "49%",
+            top: "9%",
+            backgroundColor: "red",
             transform: `rotateZ(${now.getSeconds() * 6}deg)`,
           }}
         />
@@ -41,47 +88,3 @@ export default function Clock() {
     </div>
   );
 }
-
-// body {
-//   font-family: sans-serif;
-// }
-
-// .clock {
-//   width: 300px;
-//   height: 300px;
-//   border-radius: 50%;
-//   position: absolute;
-//   top: calc(50% - 150px);
-//   left: calc(50% - 150px);
-//   box-shadow: 0 2px 30px rgba(0, 0, 0, 0.2);
-// }
-
-// .hour_hand {
-//   position: absolute;
-//   width: 6px;
-//   height: 60px;
-//   background: #222;
-//   top: 30%;
-//   left: 49%;
-//   transform-origin: bottom;
-// }
-
-// .min_hand {
-//   position: absolute;
-//   width: 4px;
-//   height: 80px;
-//   background: #444;
-//   top: 22.5%;
-//   left: 49%;
-//   transform-origin: bottom;
-// }
-
-// .sec_hand {
-//   position: absolute;
-//   width: 2px;
-//   height: 118px;
-//   background: red;
-//   top: 10.5%;
-//   left: 50%;
-//   transform-origin: bottom;
-// }
