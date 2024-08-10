@@ -1,18 +1,28 @@
 import { useState, useEffect } from "react";
 import "./styles.css";
 
-// 1) Create a grid 3x3; // Done
-// 2) Render every item in the screen; // Done
-// 3) Omit the rendering of the 4 index; // Done
-// 4) Start to capture the square index on click; // Done
-// 5) If the memory has indexes, light up the square that
-// matches the memory index; // Done
-// 6) If every quare where filled, start poping out
-// the memory indexes saved; 300ms interval. // Done
-
 const GRID = new Array(9).fill();
 const MAX_LENGTH = 8;
 const deepClone = (array) => JSON.parse(JSON.stringify(array));
+
+function Cell({ label, disabled, isMiddleGrid, onClick, hasBeenSelected }) {
+  return (
+    <button
+      ariaLabel={label}
+      disabled={disabled}
+      onClick={onClick}
+      style={{
+        backgroundColor: hasBeenSelected ? "green" : "transparent",
+        display: "inline-block",
+        float: "left",
+        border: isMiddleGrid ? "none" : "1px solid",
+        height: "80px",
+        width: "80px",
+        margin: "10px",
+      }}
+    ></button>
+  );
+}
 
 export default function App() {
   const [orderClicked, setOrderClicked] = useState([]);
@@ -69,22 +79,15 @@ export default function App() {
           const isMiddleGrid = index === 4;
 
           return (
-            <div
-              style={{
-                backgroundColor: hasBeenSelected ? "green" : "transparent",
-                display: "inline-block",
-                float: "left",
-                border: isMiddleGrid ? "none" : "1px solid",
-                height: "80px",
-                width: "80px",
-                margin: "10px",
-              }}
+            <Cell
+              label={`cell-${index}`}
+              isMiddleGrid={isMiddleGrid}
+              hasBeenSelected={hasBeenSelected}
+              disabled={isMiddleGrid || blockedClick || hasBeenSelected}
               onClick={() => {
-                if (isMiddleGrid || blockedClick || hasBeenSelected) return;
-
                 handleClick(index);
               }}
-              key={`row-${index}`}
+              key={`cell-${index}`}
             />
           );
         })}
