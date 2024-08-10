@@ -80,7 +80,7 @@ export default function App() {
                 margin: "10px",
               }}
               onClick={() => {
-                if (isMiddleGrid || blockedClick) return;
+                if (isMiddleGrid || blockedClick || hasBeenSelected) return;
 
                 handleClick(index);
               }}
