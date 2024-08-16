@@ -16,9 +16,12 @@ const hasCheckedItems = (list, side) =>
   list.some((item) => item.list === side && item.checked === true);
 
 function ListItem({ listItem, handleCheck }) {
+  const id = useId();
+
   return (
     <li onClick={() => handleCheck(listItem)}>
-      <input type="checkbox" checked={listItem.checked} /> {listItem.text}
+      <input id={id} type="checkbox" checked={listItem.checked} />{" "}
+      <label htmlFor={id}>{listItem.text}</label>
     </li>
   );
 }
