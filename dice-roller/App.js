@@ -47,31 +47,36 @@ function DiceQuantityForm({ handleSubmit }) {
   );
 }
 
+const generateDices = (quantity) =>
+  Array.from({ length: quantity }, () =>
+    Math.max(Math.ceil(Math.round(Math.random() * 6)), 1)
+  );
+
 export default function App() {
-  const [diceQuantity, setDiceQuantity] = useState(0);
-  const dices = new Array(diceQuantity).fill(null);
+  const [diceResults, setDiceResults] = useState([]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.target);
     const diceQuantity = formData.get("quantity");
-    setDiceQuantity(Number(diceQuantity));
+
+    setDiceResults(generateDices(diceQuantity));
   };
 
   return (
     <div>
       <DiceQuantityForm handleSubmit={handleSubmit} />
 
-      <div className="dice-table">
-        {dices.length > 0 &&
-          dices.map((_, index) => (
-            <DiceRenderer
-              key={`dice-${index}`}
-              diceNumber={Math.round(Math.random() * 6)}
-            />
+      {diceResults.length > 0 && (
+        <div aria-live="polite" role="status" className="dice-table">
+          {diceResults.map((result, index) => (
+            <DiceRenderer key={`dice-${index}`} diceNumber={result} />
           ))}
-      </div>
+
+          <div className="screen-reader-only">{diceResults.join(", ")}</div>
+        </div>
+      )}
     </div>
   );
 }
