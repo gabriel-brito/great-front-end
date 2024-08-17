@@ -11,7 +11,11 @@ const options = [5, 10, 20];
 function Pagination({ itemsPerPage, handleitemsPerPage, pagination }) {
   return (
     <div className="pagination flex-center">
-      <select defaultValue={itemsPerPage} onChange={handleitemsPerPage}>
+      <select
+        aria-label="Page Size"
+        defaultValue={itemsPerPage}
+        onChange={handleitemsPerPage}
+      >
         {options.map((option) => (
           <option key={`option-${option}`} value={option}>
             Show {option}
@@ -29,7 +33,7 @@ function Pagination({ itemsPerPage, handleitemsPerPage, pagination }) {
           Prev
         </button>
 
-        <p>
+        <p aria-label="Page Number">
           Page {pagination.page} of {pagination.lastPage}
         </p>
 
