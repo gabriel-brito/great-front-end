@@ -20,18 +20,15 @@ const COLORS = {
   beige: "#ff8787",
 };
 
-// 1) Draw Canvas - Done;
-// 2) Create bottom tools - Done;
-// 3) Select color on click - Done;
-// 4) Color cell on click - Done;
-// 5) Alternate between "draw" and "erase" mode - Done;
-
 function Cell({ isOdd, color = null, handleClick }) {
+  const { isDragging } = useCanvasProvider();
   const styles = color ? { backgroundColor: color } : {};
 
   return (
     <button
       onClick={handleClick}
+      onMouseDown={handleClick}
+      onMouseEnter={isDragging ? handleClick : null}
       role="cell"
       className={["cell", isOdd && "odd-cell"].filter(Boolean).join(" ")}
       style={styles}
@@ -40,11 +37,16 @@ function Cell({ isOdd, color = null, handleClick }) {
 }
 
 function Canvas() {
-  const { canvas } = useCanvasProvider();
+  const { canvas, setIsDragging } = useCanvasProvider();
   const { paintCell } = useCanvasProvider();
 
   return (
-    <div aria-live="polite" className="canvas">
+    <div
+      aria-live="polite"
+      className="canvas"
+      onMouseDown={() => setIsDragging(true)}
+      onMouseUp={() => setIsDragging(false)}
+    >
       {canvas.map((row, rowIndex) => (
         <div key={`row-${rowIndex}`}>
           {row.map((cell, cellIndex) => (
@@ -125,6 +127,7 @@ function CanvasProvider({ children }) {
   const [canvas, setCanvas] = useState(BASE_CANVAS);
   const [method, setMethod] = useState("draw");
   const [selectedColor, setSelectedColor] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
   const isDrawing = method === "draw";
 
   const handleSelectedColor = (hex) => {
@@ -151,6 +154,8 @@ function CanvasProvider({ children }) {
     paintCell,
     canvas,
     isDrawing,
+    isDragging,
+    setIsDragging,
     handleMethod,
     handleSelectedColor,
     selectedColor,
