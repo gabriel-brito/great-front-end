@@ -1,0 +1,29 @@
+body {
+    font-family: sans-serif;
+}
+
+table {
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+td,
+th {
+    padding: 4px;
+    border-bottom: 1px solid #ddd;
+    text-align: start;
+}
+
+th {
+    vertical-align: top;
+}
+
+hr {
+    margin: 10px auto -5px;
+}
+
+.flex-center {
+    align-items: center;
+    display: flex;
+    gap: 16px;
+}
