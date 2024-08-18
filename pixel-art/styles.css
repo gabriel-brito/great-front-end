@@ -1,0 +1,55 @@
+body {
+    font-family: sans-serif;
+}
+
+.canvas {
+    margin: 0 auto;
+    width: fit-content;
+}
+
+.cell {
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.odd-cell {
+    background-color: #e9ecef;
+}
+
+.controls {
+    margin: 10px auto;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.controls-buttons {
+    border: 1px solid;
+}
+
+.controls-buttons button {
+    background-color: transparent;
+    border: none;
+    height: 30px;
+    width: 60px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.controls-buttons .selected {
+    color: white;
+    background-color: black;
+}
+
+.palette.cell {
+    border: 1px solid #e9ecef;
+}
+
+.palette.cell.selected {
+    border: 1px solid black;
+}
