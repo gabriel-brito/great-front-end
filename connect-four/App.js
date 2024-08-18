@@ -12,7 +12,7 @@ const boardContext = createContext(null);
 // Push funcionality (top down) - Done;
 // add reset funcionality - Done;
 // alternate between users - Done;
-// verify winning conditions - In Progress;
+// verify winning conditions - Done;
 // - 1) row - Done;
 // - 2) column - Done;
 // - 3) Diagonal - Done;
