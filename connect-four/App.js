@@ -1,26 +1,16 @@
 import { useState, createContext, useContext } from "react";
 
-import "./styles.css";
-
 const boardContext = createContext(null);
-
-// Red pieces: #d9313d
-// Yellow pieces: #fdc601
-// Blue board: #1c61f2
-
-// Create Board (6x7) - Done;
-// Push funcionality (top down) - Done;
-// add reset funcionality - Done;
-// alternate between users - Done;
-// verify winning conditions - Done;
-// - 1) row - Done;
-// - 2) column - Done;
-// - 3) Diagonal - Done;
-// Add draw funcionality - Done;
 
 const ROWS = 6;
 const COLUMNS = 7;
 const DISCS_SEQUENCE_TO_WIN = 4;
+const DIRECTiON_DELTAS = [
+  { row: 0, col: 1 },
+  { row: 1, col: 0 },
+  { row: 1, col: 1 },
+  { row: -1, col: 1 },
+];
 const BOARD_BASE = Array.from({ length: ROWS }, () =>
   Array(COLUMNS).fill(null)
 );
@@ -124,92 +114,44 @@ export default function App() {
   );
 }
 
-function checkWinnerByHorizontal(board, player) {
-  let result = false;
+function isWinningSequence(
+  startRow,
+  startCol,
+  deltaRow,
+  deltaCol,
+  board,
+  player
+) {
+  for (let i = 0; i < DISCS_SEQUENCE_TO_WIN; i++) {
+    const row = startRow + i * deltaRow;
+    const col = startCol + i * deltaCol;
 
-  for (let i = 0; i < board.length; i++) {
-    let count = 0;
-
-    for (let j = 0; j < board[i].length; j++) {
-      if (board[i][j] === player) {
-        count++;
-      } else {
-        count = 0;
-      }
-
-      if (count === DISCS_SEQUENCE_TO_WIN) {
-        result = true;
-        break;
-      }
+    if (
+      row < 0 ||
+      row >= ROWS ||
+      col < 0 ||
+      col >= COLUMNS ||
+      board[row][col] !== player
+    ) {
+      return false;
     }
   }
 
-  return result;
-}
-
-function checkWinnerByVertical(board, player) {
-  let result = false;
-
-  for (let i = 0; i < COLUMNS; i++) {
-    let count = 0;
-
-    for (let j = 0; j < board.length; j++) {
-      if (board[j][i] === player) {
-        count++;
-      } else {
-        count = 0;
-      }
-
-      if (count === DISCS_SEQUENCE_TO_WIN) {
-        result = true;
-        break;
-      }
-    }
-  }
-
-  return result;
-}
-
-function checkWinnerByDiagonal(board, player) {
-  let result = false;
-
-  // Check top-left to bottom-right diagonals
-  for (let row = 0; row <= ROWS - 4; row++) {
-    for (let col = 0; col <= COLUMNS - 4; col++) {
-      if (
-        board[row][col] === player &&
-        board[row + 1][col + 1] === player &&
-        board[row + 2][col + 2] === player &&
-        board[row + 3][col + 3] === player
-      ) {
-        result = true;
-      }
-    }
-  }
-
-  // Check bottom-left to top-right diagonals
-  for (let row = 3; row < ROWS; row++) {
-    for (let col = 0; col <= COLUMNS - 4; col++) {
-      if (
-        board[row][col] === player &&
-        board[row - 1][col + 1] === player &&
-        board[row - 2][col + 2] === player &&
-        board[row - 3][col + 3] === player
-      ) {
-        result = true;
-      }
-    }
-  }
-
-  return result;
+  return true;
 }
 
 function checkWinner(board, player) {
-  return (
-    checkWinnerByHorizontal(board, player) ||
-    checkWinnerByVertical(board, player) ||
-    checkWinnerByDiagonal(board, player)
-  );
+  for (let i = 0; i < ROWS; i++) {
+    for (let j = 0; j < COLUMNS; j++) {
+      for (const { row: deltaRow, col: deltaCol } of DIRECTiON_DELTAS) {
+        if (isWinningSequence(i, j, deltaRow, deltaCol, board, player)) {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
 }
 
 function BoardContextProvider({ children }) {
@@ -247,6 +189,7 @@ function BoardContextProvider({ children }) {
   };
 
   const resetGame = () => {
+    setWinner("");
     setBoard(BOARD_BASE);
     setPlayerTurn(1);
   };
