@@ -1,24 +1,57 @@
 import { useState } from "react";
 import "./styles.css";
 
-const table = Array(3)
-  .fill()
-  .map(() => Array(3).fill());
+const ROWS = 3;
+const COLUMNS = 3;
+const SEQUENCE_TO_WIN = 3;
+const DIRECTION_DELTAS = [
+  { row: 0, col: 1 },
+  { row: 1, col: 0 },
+  { row: 1, col: 1 },
+  { row: -1, col: 1 },
+];
+const BOARD_BASE = Array.from({ length: ROWS }, () => Array(COLUMNS).fill());
 
 const Player = {
   X: 1,
   O: 2,
 };
 
+function isWinnerSequence(
+  startRow,
+  startCol,
+  deltaRow,
+  deltaColumn,
+  board,
+  player
+) {
+  for (let i = 0; i < SEQUENCE_TO_WIN; i++) {
+    const row = startRow + i * deltaRow;
+    const col = startCol + i * deltaColumn;
+
+    if (
+      row < 0 ||
+      row >= ROWS ||
+      col < 0 ||
+      col >= COLUMNS ||
+      board[row][col] !== player
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 export default function App() {
-  const [gameTable, setGameTable] = useState(table);
+  const [gameTable, setGameTable] = useState(BOARD_BASE);
   const [currentTurn, setCurrentTurn] = useState("X");
   const [winnerPlayer, setWinnerPlayer] = useState("");
   const hasWinner = !!winnerPlayer;
   const nextTurn = currentTurn === "X" ? "O" : "X";
 
   const handleReset = () => {
-    setGameTable(table);
+    setGameTable(BOARD_BASE);
     setCurrentTurn("X");
     setWinnerPlayer("");
   };
@@ -27,91 +60,52 @@ export default function App() {
     setWinnerPlayer(`Player ${Player[playerChoise]} wins!`);
   };
 
-  const checkWinner = (iterator, playerChoise) => {
-    return iterator.every((entry) => entry === playerChoise);
-  };
-
   const handleClick = (row, column) => {
-    const gameTableClone = JSON.parse(JSON.stringify(gameTable));
-    const thisTurn = currentTurn;
+    const board = gameTable.map((row) => [...row]);
 
-    if (gameTableClone[row][column]) {
+    if (board[row][column]) {
       return;
     }
 
-    gameTableClone[row][column] = thisTurn;
+    board[row][column] = currentTurn;
+    setGameTable(board);
 
-    checkDraw(gameTableClone);
-    checkWinners(gameTableClone, thisTurn);
+    if (checkDraw(board)) {
+      setWinnerPlayer("Draw!");
+      return;
+    }
+
+    if (checkWinners(board, currentTurn)) {
+      return;
+    }
 
     setCurrentTurn(nextTurn);
-    setGameTable(gameTableClone);
   };
 
-  const horizontalWinner = (row, playerChoise) => {
-    const result = [];
+  const checkWinners = (board, player) => {
+    for (let i = 0; i < ROWS; i++) {
+      for (let j = 0; j < COLUMNS; j++) {
+        for (const { row: deltaRow, col: deltaColumn } of DIRECTION_DELTAS) {
+          if (isWinnerSequence(i, j, deltaRow, deltaColumn, board, player)) {
+            handleWinner(player);
 
-    row.forEach((column) => {
-      result.push(column);
-    });
-
-    if (checkWinner(result, playerChoise)) {
-      handleWinner(playerChoise);
-    }
-  };
-
-  const verticalWinner = (table, playerChoise) => {
-    for (let columnIndex = 0; columnIndex < 3; columnIndex++) {
-      const verticalResult = [];
-
-      for (let rowIndex = 0; rowIndex < table.length; rowIndex++) {
-        verticalResult.push(table[rowIndex][columnIndex]);
-      }
-
-      if (checkWinner(verticalResult, playerChoise)) {
-        handleWinner(playerChoise);
-        break;
-      }
-    }
-  };
-
-  const winnerByDiagonal = (table, playerChoise) => {
-    const leftDiagonal = [table[0][0], table[1][1], table[2][2]];
-    const rightDiagonal = [table[0][2], table[1][1], table[2][0]];
-
-    if (
-      checkWinner(leftDiagonal, playerChoise) ||
-      checkWinner(rightDiagonal, playerChoise)
-    ) {
-      handleWinner(playerChoise);
-    }
-  };
-
-  const checkWinners = (gameTableClone, playerChoise) => {
-    gameTableClone.forEach((row) => {
-      horizontalWinner(row, playerChoise);
-    });
-
-    verticalWinner(gameTableClone, playerChoise);
-
-    winnerByDiagonal(gameTableClone, playerChoise);
-  };
-
-  const checkDraw = (gameTable) => {
-    let isDraw = true;
-
-    for (let rowIndex = 0; rowIndex < gameTable.length; rowIndex++) {
-      for (let columnIndex = 0; columnIndex < 3; columnIndex++) {
-        if (!gameTable[rowIndex][columnIndex]) {
-          isDraw = false;
-          break;
+            return true;
+          }
         }
       }
     }
 
-    if (isDraw) {
-      setWinnerPlayer("Draw!");
-    }
+    return false;
+  };
+
+  const checkDraw = (gameTable) => {
+    const possibleMovements = ROWS * COLUMNS;
+    const movementsMade = gameTable.reduce(
+      (acc, row) => acc + row.filter(Boolean).length,
+      0
+    );
+
+    return possibleMovements === movementsMade;
   };
 
   return (
@@ -131,7 +125,7 @@ export default function App() {
         {gameTable.map((row, rowIndex) => (
           <div key={`${rowIndex}-row`} style={{ display: "flex" }}>
             {row.map((column, columnIndex) => (
-              <div
+              <button
                 style={{
                   padding: "16px",
                   width: "40px",
@@ -150,7 +144,7 @@ export default function App() {
                 key={`${rowIndex}-${columnIndex}-column`}
               >
                 {column}
-              </div>
+              </button>
             ))}
           </div>
         ))}
