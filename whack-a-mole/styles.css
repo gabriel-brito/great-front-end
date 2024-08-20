@@ -1,0 +1,65 @@
+abody {
+    font-family: sans-serif;
+    background-color: #FA8072;
+}
+
+.whack-a-mole {
+    padding: 32px 16px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    height: fit-content;
+}
+
+.header button {
+    margin: 0 auto;
+}
+
+.header p {
+    margin: 0;
+    font-weight: 700;
+}
+
+
+.game {
+    display: grid;
+    aspect-ratio: 1 / 1;
+    gap: 8px;
+}
+
+.game-column {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: column;
+    height: 120px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.game-column .terrain {
+    overflow: hidden;
+    margin-bottom: -14px;
+}
+
+.game-column .mole {
+    background-color: transparent;
+    border: 0;
+    position: absolute;
+    bottom: -80px;
+    z-index: -1;
+    cursor: pointer;
+    transition: bottom 0.1s ease-in;
+}
+
+.game-column .active-mole {
+    bottom: 0;
+    z-index: 1;
+}
+
+.game-column .mole img {
+    max-height: 80px;
+}
