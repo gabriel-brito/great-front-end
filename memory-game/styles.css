@@ -1,0 +1,35 @@
+body {
+    font-family: sans-serif;
+}
+
+.game-grid {
+    display: grid;
+    gap: 10px;
+    border: 2px solid;
+    padding: 10px;
+    max-width: 280px;
+    border-radius: 8px;
+    margin: 20px auto;
+}
+
+.game-grid__card {
+    height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid black;
+    border-radius: 8px;
+    color: transparent;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.game-grid__card--visible {
+    color: inherit;
+}
+
+.game-grid__card--match {
+    border: 0;
+    background-color: white;
+}
